@@ -191,6 +191,13 @@ type (
 	// Params provides mapping of path parameter names to the values
 	// found in the request URI.
 	Params map[string]string
+
+	// HandlerFactory is something that knows how to turn a collection
+	// of Routables into a single http.Handler which can dispatch
+	// to the appropriate Routable.
+	HandlerFactory interface {
+		Handler([]Routable) (http.Handler, error)
+	}
 )
 
 // Conveniences for those who prefer to use the With() and WithHTTP()
