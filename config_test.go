@@ -9,29 +9,47 @@ import (
 	"golang.org/x/net/context"
 )
 
+const (
+	testTimeout = 5 * time.Second
+)
+
 var (
 	testErrorHandler  ErrorHandlerFunc = func(error HTTPError, ctx context.Context) error { return nil }
 	testMiddleware    MiddlewareFunc   = func(HandlerFunc) HandlerFunc { return nil }
 	testMiddlewareTwo MiddlewareFunc   = func(HandlerFunc) HandlerFunc { return nil }
 )
 
-func TestDefaultConfig(t *testing.T) {
-	config := defaultConfig()
-	assert.Equal(t, DefaultTimeout, config.timeout, "Config didn't have default timeout.")
-	assert.Nil(t, config.errorHandler, "Default error handler provided?")
-	assert.NotNil(t, config.middlewares, "Nil default middleware?")
-	assert.Equal(t, 0, len(config.middlewares), "Default middleware?")
+func assertDefaultConfig(t *testing.T, config config) {
+	assert.Equal(t, DefaultTimeout, config.Timeout(), "Config didn't have default timeout.")
+	assert.Nil(t, config.ErrorHandler(), "Default error handler provided?")
+	assert.NotNil(t, config.Middlewares(), "Nil default middleware?")
+	assert.Equal(t, 0, len(config.Middlewares()), "Default middleware?")
 }
 
-func TestNewConfig(t *testing.T) {
-	orig := config{
-		timeout:      DefaultTimeout,
+func testConfig() config {
+	return config{
+		timeout:      testTimeout,
 		errorHandler: testErrorHandler,
 		middlewares:  []MiddlewareFunc{testMiddleware},
 	}
+}
+
+func assertTestConfig(t *testing.T, config config) {
+	assert.Equal(t, testTimeout, config.timeout, "Incorrect Timeout")
+	assert.NotNil(t, config.ErrorHandler, "Missing error handler")
+	assert.Equal(t, 1, len(config.middlewares), "Incorrect middlewares count")
+}
+
+func TestDefaultConfig(t *testing.T) {
+	config := defaultConfig()
+
+	assertDefaultConfig(t, config)
+}
+
+func TestNewConfig(t *testing.T) {
+	orig := testConfig()
 	config := newConfig(orig)
-	assert.Equal(t, orig.timeout, config.timeout, "Incorrect Timeout")
-	assert.Equal(t, len(orig.middlewares), len(config.middlewares), "Incorrect middlewares count")
+	assertTestConfig(t, config)
 }
 
 func TestWithErrorHandler(t *testing.T) {
