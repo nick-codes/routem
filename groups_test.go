@@ -10,24 +10,23 @@ const (
 	testPathTwo = "test/path/two"
 )
 
-func assertDefaultGroup(t *testing.T, group *group) {
-	assertDefaultConfig(t, group.config)
+func assertDefaultGroup(t *testing.T, group Group) {
+	assertDefaultConfig(t, group)
 	assertGroup(t, group)
 }
 
-func assertTestGroup(t *testing.T, group *group) {
-	assertTestConfig(t, group.config)
+func assertTestGroup(t *testing.T, group Group) {
+	assertTestConfig(t, group)
 	assertGroup(t, group)
 }
 
-func assertGroupRelation(t *testing.T, group, subGroup *group) {
+func assertGroupRelation(t *testing.T, group, subGroup Group) {
 	assert.Equal(t, 0, len(subGroup.Routes()), "Wrong subGroup route count")
 	assert.Equal(t, 1, len(group.Routes()), "Wrong route count")
 }
 
-func assertGroup(t *testing.T, group *group) {
+func assertGroup(t *testing.T, group Group) {
 	assert.Equal(t, testPath, group.Path(), "Wrong path")
-	assert.Nil(t, group.Handler(), "Handler on group")
 }
 
 func TestNewGroup(t *testing.T) {

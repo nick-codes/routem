@@ -34,7 +34,7 @@ func (r *route) Handler() HandlerFunc {
 // Helpers
 // =-=-=-=
 
-func newRoute(defs config, methods []Method, path string, handler HandlerFunc) *route {
+func newRoute(defs config, methods []Method, path string, handler HandlerFunc) Route {
 
 	r := &route{
 		config:  newConfig(defs),
@@ -46,7 +46,7 @@ func newRoute(defs config, methods []Method, path string, handler HandlerFunc) *
 	return r
 }
 
-func newHTTPRoute(def config, methods []Method, path string, handler http.Handler) *route {
+func newHTTPRoute(def config, methods []Method, path string, handler http.Handler) Route {
 
 	route := newRoute(def, methods, path, wrapHTTPHandler(handler))
 

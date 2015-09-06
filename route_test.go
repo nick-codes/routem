@@ -28,29 +28,29 @@ func (t testHTTPHandler) ServeHTTP(http.ResponseWriter, *http.Request) {
 	*(t.called) = true
 }
 
-func assertTestRoute(t *testing.T, route *route) {
-	assertTestConfig(t, route.config)
+func assertTestRoute(t *testing.T, route Route) {
+	assertTestConfig(t, route)
 
 	assertRoute(t, route)
 }
 
-func assertDefaultRoute(t *testing.T, route *route) {
-	assertDefaultConfig(t, route.config)
+func assertDefaultRoute(t *testing.T, route Route) {
+	assertDefaultConfig(t, route)
 
 	assertRoute(t, route)
 }
 
-func assertTestRouteWithMethods(t *testing.T, route *route, methods []Method) {
-	assertTestConfig(t, route.config)
+func assertTestRouteWithMethods(t *testing.T, route Route, methods []Method) {
+	assertTestConfig(t, route)
 
 	assertRouteWithMethods(t, route, methods)
 }
 
-func assertRoute(t *testing.T, route *route) {
+func assertRoute(t *testing.T, route Route) {
 	assertRouteWithMethods(t, route, GetMethod)
 }
 
-func assertRouteWithMethods(t *testing.T, route *route, methods []Method) {
+func assertRouteWithMethods(t *testing.T, route Route, methods []Method) {
 	assert.Equal(t, len(methods), len(route.Methods()), "Wrong method count")
 	for i, method := range methods {
 		assert.Equal(t, method, route.Methods()[i], "Wrong method")
@@ -59,25 +59,25 @@ func assertRouteWithMethods(t *testing.T, route *route, methods []Method) {
 	assert.NotNil(t, route.Handler(), "No Handler")
 }
 
-func assertDefaultHTTPRoute(t *testing.T, route *route, testHandler testHTTPHandler) {
-	assertDefaultConfig(t, route.config)
+func assertDefaultHTTPRoute(t *testing.T, route Route, testHandler testHTTPHandler) {
+	assertDefaultConfig(t, route)
 	assertRoute(t, route)
 	assertHTTPRoute(t, route, testHandler)
 }
 
-func assertTestHTTPRoute(t *testing.T, route *route, testHandler testHTTPHandler) {
-	assertTestConfig(t, route.config)
+func assertTestHTTPRoute(t *testing.T, route Route, testHandler testHTTPHandler) {
+	assertTestConfig(t, route)
 	assertRoute(t, route)
 	assertHTTPRoute(t, route, testHandler)
 }
 
-func assertTestHTTPRouteWithMethods(t *testing.T, route *route, testHandler testHTTPHandler, methods []Method) {
-	assertTestConfig(t, route.config)
+func assertTestHTTPRouteWithMethods(t *testing.T, route Route, testHandler testHTTPHandler, methods []Method) {
+	assertTestConfig(t, route)
 	assertRouteWithMethods(t, route, methods)
 	assertHTTPRoute(t, route, testHandler)
 }
 
-func assertHTTPRoute(t *testing.T, route *route, testHandler testHTTPHandler) {
+func assertHTTPRoute(t *testing.T, route Route, testHandler testHTTPHandler) {
 	response, request, params := setupContextTest(t)
 
 	ctx, _ := newContext(route.Timeout(), request, response, params)
