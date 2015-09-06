@@ -133,8 +133,20 @@ type (
 	// configuration after the call to Run do not effect the served
 	// routes.
 	Runnable interface {
-		Run(address string) error
-		RunTLS(address string, cert string, key string) error
+		Run(address string) (Service, error)
+		RunTLS(address string, cert string, key string) (Service, error)
+	}
+
+	// Service abstract an http.Server and provides
+	// methods for introspecting the service and
+	// stopping it from running.
+	Service interface {
+		Address() string
+		IsRunning() bool
+		Stop() error
+		// Blocks until IsRunning() returns false
+		// Always returns an error with why the service stopped
+		Wait() error
 	}
 
 	// A Router holds default configuration for all Routes and Groups
