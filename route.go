@@ -29,6 +29,10 @@ func (r *route) Path() string {
 func (r *route) Handler() HandlerFunc {
 	return r.handler
 }
+func (r *route) Prefix(prefix string) Route {
+	route := newRoute(r.config, r.methods, prefix+r.path, r.handler)
+	return route
+}
 
 // =-=-=-=
 // Helpers

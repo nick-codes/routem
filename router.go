@@ -1,6 +1,7 @@
 package routem
 
 import (
+	"fmt"
 	"net/http"
 )
 
@@ -68,6 +69,37 @@ func (r *router) RunTLS(address, certFile, keyFile string) (Service, error) {
 // Helpers
 // =-=-=-=
 
+func flatten(prefix string, routes []Routable) ([]Route, error) {
+	flat := make([]Route, 0, len(routes))
+	for _, route := range routes {
+		group, isGroup := route.(Group)
+		if isGroup {
+			groupRoutes, err := flatten(prefix+group.Path(), group.Routes())
+			if err != nil {
+				return nil, err
+			}
+			for _, gr := range groupRoutes {
+				flat = append(flat, gr)
+			}
+		} else {
+			route, isRoute := route.(Route)
+			// This is impossible but just in case
+			if !isRoute {
+				return nil, fmt.Errorf("Found Routable not a Group or Route? WTF! %v", route)
+			}
+			flat = append(flat, route.Prefix(prefix))
+		}
+	}
+
+	return flat, nil
+}
+
 func (r *router) handler() (http.Handler, error) {
-	return r.factory.Handler(r.routes)
+	routes, err := flatten("", r.Routes())
+
+	if err == nil {
+		return r.factory.Handler(routes)
+	}
+
+	return nil, err
 }

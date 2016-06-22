@@ -2,6 +2,7 @@ package routem
 
 import (
 	"net/http"
+	"strings"
 
 	"testing"
 
@@ -107,4 +108,14 @@ func TestNewHttpRoute(t *testing.T) {
 	route := newHTTPRoute(config, GetMethod, testPath, testHandler)
 
 	assertDefaultHTTPRoute(t, route, testHandler)
+}
+
+func TestPrefix(t *testing.T) {
+	config := defaultConfig()
+
+	parts := strings.Split(testPath, "/")
+	route := newRoute(config, GetMethod, parts[1], testHandler)
+	route = route.Prefix(parts[0] + "/")
+
+	assertRoute(t, route)
 }

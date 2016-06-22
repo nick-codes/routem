@@ -165,9 +165,15 @@ type (
 	}
 
 	// A Route has methods, and a handler.
+	// It also knows how to return a copy of
+	// itself with a given prefix added
+	// which is used to flatten into an array
+	// of Routes which are then passed to
+	// the HandlerFactory.
 	Route interface {
 		Routable
 
+		Prefix(string) Route
 		Methods() []Method
 		Handler() HandlerFunc
 	}
@@ -205,10 +211,13 @@ type (
 	Params map[string]string
 
 	// HandlerFactory is something that knows how to turn a collection
-	// of Routables into a single http.Handler which can dispatch
-	// to the appropriate Routable.
+	// of Routes into a single http.Handler which can dispatch
+	// to the appropriate Route handler. Note that because this
+	// takes an array of Routes all groups have already been
+	// expanded into individual routes with the appropriate group
+	// prefix.
 	HandlerFactory interface {
-		Handler([]Routable) (http.Handler, error)
+		Handler([]Route) (http.Handler, error)
 	}
 )
 
