@@ -23,8 +23,10 @@ const (
 	requestKey contextKey = iota
 )
 
-func newContext(timeout time.Duration, request *http.Request, response http.ResponseWriter, params Params) (context.Context, context.CancelFunc) {
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+// NewRequestContext is a helper which a HandlerFactory can use to insert request, response and parameters into a context
+// before passing it to a route handler.
+func NewRequestContext(c context.Context, timeout time.Duration, request *http.Request, response http.ResponseWriter, params Params) (context.Context, context.CancelFunc) {
+	ctx, cancel := context.WithTimeout(c, timeout)
 
 	data := requestData{
 		request:  request,

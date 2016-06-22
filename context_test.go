@@ -2,6 +2,7 @@ package routem
 
 import (
 	"net/http"
+	"time"
 
 	"net/http/httptest"
 	"testing"
@@ -9,6 +10,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
 )
+
+func newContext(timeout time.Duration, request *http.Request, response http.ResponseWriter, params Params) (context.Context, context.CancelFunc) {
+	return NewRequestContext(context.Background(), timeout, request, response, params)
+}
 
 func setupContextTest(t *testing.T) (http.ResponseWriter, *http.Request, Params) {
 	response := httptest.NewRecorder()
