@@ -6,6 +6,7 @@ before_install:
     - go get github.com/mattn/goveralls
     - go get golang.org/x/tools/cmd/cover
 script:
-    - go test -coverprofile=routem.coverprofile
+    - go test . -coverprofile=routem.coverprofile
+    - go test ./trie -coverprofile=trie.coverprofile
     - $HOME/gopath/bin/gover
     - $HOME/gopath/bin/goveralls -coverprofile=gover.coverprofile -service=travis-ci
