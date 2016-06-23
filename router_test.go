@@ -171,7 +171,7 @@ func TestFlattenErrorsOnInvalidType(t *testing.T) {
 	// we handle it anyway
 	router.routes = append(router.routes, &nonRoute{})
 
-	_, err := router.handler()
+	_, err := router.Handler()
 
 	assert.NotNil(t, err)
 }
@@ -185,7 +185,7 @@ func TestFlattenErrorsCascadeUpOnInvalidType(t *testing.T) {
 	// we handle it anyway
 	group.routes = append(group.routes, &nonRoute{})
 
-	_, err := router.handler()
+	_, err := router.Handler()
 
 	assert.NotNil(t, err)
 }
@@ -200,7 +200,7 @@ func TestFlattenWithGroup(t *testing.T) {
 	group := router.WithGroup("/")
 	group.Get("test", func(ctx context.Context) HTTPError { return nil })
 
-	_, err := router.handler()
+	_, err := router.Handler()
 
 	assert.Nil(t, err)
 

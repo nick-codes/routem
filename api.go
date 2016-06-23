@@ -135,6 +135,7 @@ type (
 	Runnable interface {
 		Run(address string) (Service, error)
 		RunTLS(address string, cert string, key string) (Service, error)
+		Handler() (http.Handler, error)
 	}
 
 	// Service abstract an http.Server and provides

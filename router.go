@@ -30,7 +30,7 @@ func NewRouter(factory HandlerFactory) Router {
 // =-=-=-=
 
 func (r *router) Run(address string) (Service, error) {
-	handler, err := r.handler()
+	handler, err := r.Handler()
 
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func (r *router) Run(address string) (Service, error) {
 }
 
 func (r *router) RunTLS(address, certFile, keyFile string) (Service, error) {
-	handler, err := r.handler()
+	handler, err := r.Handler()
 
 	if err != nil {
 		return nil, err
@@ -94,7 +94,7 @@ func flatten(prefix string, routes []Routable) ([]Route, error) {
 	return flat, nil
 }
 
-func (r *router) handler() (http.Handler, error) {
+func (r *router) Handler() (http.Handler, error) {
 	routes, err := flatten("", r.Routes())
 
 	if err == nil {
